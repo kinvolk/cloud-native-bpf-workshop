@@ -1,7 +1,8 @@
 # Cloud Native BPF Workshop
 
 It's strongly recommended to have all requirements installed and ready to
-use before starting the workshop.
+use before starting the workshop. This could be on your own computer or on
+a virtual machine that you have access to.
 
 ## Minikube requirements
 
@@ -9,11 +10,20 @@ To try out the exercises of this workshop, you'll need to run a version of
 Minikube with a few additional patches to get access to the kernel headers.
 Please read [minikube.md](./minikube.md) for instructions.
 
+## kubectl requirements
+
+Please make sure that the machine you're using has kubectl installed. You
+can refer to [this
+page](https://kubernetes.io/docs/tasks/tools/install-kubectl/) for
+installation instructions.
+
 ## Inspektor Gadget requirements
 
 During the workshop, we'll use release
 [v0.2.0](https://github.com/kinvolk/inspektor-gadget/releases/tag/v0.2.0)
-of Inspektor Gadget for all examples.
+of Inspektor Gadget for all examples. Please follow the [installation
+instructions](https://github.com/kinvolk/inspektor-gadget/blob/master/Documentation/install.md),
+to have this ready.
 
 ## kubectl-trace requirements
 
