@@ -8,7 +8,7 @@ if ! kubectl version >/dev/null 2>&1; then
 fi
 
 # Check if kubectl gadget already works
-if kubectl gadget version >/dev/null 2>&1; then
+if [ "$(kubectl gadget version)" != "v0.2.0" ] ; then
   echo "INFO: Inspektor Gadget is already installed"
   exit 0
 fi
@@ -50,4 +50,3 @@ if [[ $? -ne 0 ]]; then
   echo "ERROR: failed while verifying that Inspektor Gadget is installed"
   exit 3
 fi
-
