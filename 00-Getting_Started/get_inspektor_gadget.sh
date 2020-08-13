@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check that kubectl is installed
-if ! kubectl version >/dev/null 2>&1; then
+if ! kubectl version --client=true >/dev/null 2>&1; then
   echo "ERROR: Can't execute kubectl."
   echo "Make sure kubectl is installed before installing Inspektor Gadget"
   exit 1
