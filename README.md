@@ -27,12 +27,19 @@ to have this ready.
 
 ## kubectl-trace requirements
 
-For the purpose of this workshop, we'll use a version of kubectl-trace with
-patches that haven't been released yet. In particular, we'll use this
-kubectl-trace branch
+During the workshop, we'll also use kubectl-trace. Please follow the
+[installation
+instructions](https://github.com/iovisor/kubectl-trace#installing) for
+installing the plugin on your computer.
+
+kubectl-trace is a client-side plugin but it starts pods in the Kubernetes cluster named "trace-runner".
+We needed changes on the trace-runner pod. We'll use a version of kubectl-trace with
+patches that haven't been released yet, so that it can work inside Minikube.
+In particular, we'll use this kubectl-trace branch
 [alban/ikheaders](https://github.com/kinvolk/kubectl-trace/tree/alban/ikheaders)
-that includes the following patches:
-- https://github.com/iovisor/kubectl-trace/pull/123
+that includes the following patch:
+- https://github.com/iovisor/kubectl-trace/pull/123 - add xz-utils to the
+  container image
 
 For convenience, there is a build with container images available on Docker registries.
 ```
