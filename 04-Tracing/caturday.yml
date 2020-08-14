@@ -13,7 +13,7 @@ metadata:
   labels:
     app: caturday
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: caturday
@@ -34,6 +34,7 @@ metadata:
   labels:
     app: caturday
   name: caturday
+  namespace: caturday
 spec:
   externalTrafficPolicy: Cluster
   ports:
