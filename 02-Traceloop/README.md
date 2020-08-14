@@ -37,3 +37,22 @@ We can see the last calls that were executed in the pod.
 The most interesting part of the traceloop gadget is that it allows us to
 debug a pod that crashed, even after it's gone. To see that in action,
 let's start a pod that will crash.
+
+
+## Example with nginx
+
+```
+kubectl apply -f nginx.yaml
+minikube service nginx-deployment
+```
+
+- Go to http://192.168.39.189:32123/hello
+- Notice the 404 error
+
+```
+kubectl gadget opensnoop --selector app=nginx
+```
+
+```
+kubectl edit deploy nginx-deployment
+```
