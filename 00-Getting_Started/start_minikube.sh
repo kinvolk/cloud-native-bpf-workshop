@@ -33,4 +33,5 @@ echo Executing minikube
 chmod +x minikube
 ./minikube delete
 ./minikube start --driver=kvm2 --iso-url=file://$(pwd)/minikube.iso
+echo Verifying that kernel headers are correctly installed in minikube
 ./minikube ssh -- 'bash -c "uname -a ; if [ -e /sys/kernel/kheaders.tar.xz ] ; then echo kheaders.tar.xz available ; else echo kheaders.tar.xz missing ; fi"'
