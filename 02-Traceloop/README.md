@@ -32,8 +32,33 @@ kubectl gadget traceloop pod kube-system coredns-66bff467f8-ntxqt 0
 
 We can see the last calls that were executed in the pod.
 
-## Inspect a failing pod
+### Inspect a failing pod
 
 The most interesting part of the traceloop gadget is that it allows us to
 debug a pod that crashed, even after it's gone. To see that in action,
-let's start a pod that will crash.
+let's start a pod that will terminate with an error.
+
+```
+kubectl run --restart=Never -ti --image=busybox multiplication \
+    -- sh -c \
+    'RANDOM=output ; echo "3*7*2" | bc > /tmp/file-$RANDOM ; cat /tmp/file-$RANDOM'
+```
+
+This pod performed a multiplication, saved the result in a file and attempted
+to display the result but failed to do so because of a mistake in the shell
+script. The pod is no longer running, so we cannot read the file anymore.
+
+Let's go further and delete the pod:
+```
+kubectl delete pod multiplication
+```
+
+It is possible to retrieve the result of the multiplication using the traceloop
+gadget. You can first identify the relevent trace from the list:
+```
+kubectl gadget traceloop list -n default
+```
+And then print the trace:
+```
+gadget traceloop show XXXXXX
+```

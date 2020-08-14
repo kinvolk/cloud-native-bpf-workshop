@@ -1,0 +1,50 @@
+# Based on https://github.com/fntlnz/caturday/blob/master/caturday.yml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: caturday
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caturday
+  namespace: caturday
+  labels:
+    app: caturday
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caturday
+  template:
+    metadata:
+      labels:
+        app: caturday
+    spec:
+      containers:
+      - name: caturday
+        image: docker.io/fntlnz/caturday:latest
+---
+# Service accessible via the command:
+# minikube service caturday
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: caturday
+  name: caturday
+  namespace: caturday
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 32123
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: caturday
+  sessionAffinity: None
+  type: LoadBalancer
+
+
