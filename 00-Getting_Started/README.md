@@ -4,6 +4,11 @@ Before we get started with the exercises, we need to have all the elements
 in place. This directory has a couple of scripts to help you get quickly
 set up.
 
+This assumes that your machine has the necessary packages for using libvirt
+already installed, that your user has the right permissions and that you
+already have kubectl installed.  [Instructions on how to get there on
+Ubuntu](ubuntu.md)
+
 ## Creating a Minikube cluster
 
 Install and run minikube by running `./start_minikube.sh`.  This will set
