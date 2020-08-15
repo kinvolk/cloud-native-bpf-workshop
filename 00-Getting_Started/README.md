@@ -7,7 +7,7 @@ set up.
 This assumes that your machine has the necessary packages for using libvirt
 already installed, that your user has the right permissions and that you
 already have kubectl installed.  [Instructions on how to get there on
-Ubuntu](ubuntu.md)
+Ubuntu or Debian](ubuntu.md)
 
 ## Creating a Minikube cluster
 
