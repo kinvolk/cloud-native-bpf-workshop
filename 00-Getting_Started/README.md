@@ -19,6 +19,13 @@ done. If there are errors, check the documentation.
 You can check that your cluster is running correctly by running `kubectl
 get pods -A` and verifying that you have the usual cluster management pods.
 
+**Note**: Minikube doesn't support nested virtualization, so if you want to
+run minikube inside a VM, you can do this by passing `--use-driver-none` to
+the `./start_minikube.sh` script. This will use the current instance as the
+node and is only recommended for a disposable VM. You will need to install
+the kernel headers for the current OS. If running Ubuntu or Debian, you'll
+also need to install the `conntrack` package if it's not installed.
+
 ## Adding the Inspektor Gadget plugin
 
 Install Inspektor Gadget by running `./get_inspektor_gadget`. This will

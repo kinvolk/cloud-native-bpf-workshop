@@ -34,6 +34,9 @@ alias kubectl-trace-run="kubectl trace run \
     --init-imagename 'docker.io/albanc/kubectl-trace-init:e896345e3d8f80aa968422c6199ac5180d688f65'"
 ```
 
+**Note**: If you're running minikube inside a VM using the `none` driver,
+you need to provide the OS kernel headers yourself.
+
 ### Basic kubectl-trace usage
 
 To use `kubectl-trace` we need to create `bpftrace` expressions, which can
@@ -48,10 +51,10 @@ To apply these expressions, we need to tell `kubectl-trace` the node or the
 pod to run them in. Let's start with a simple expression to check the
 syscalls executed in a node.
 
-Normally, you'd first list the nodes with `kubectl get nodes` and then pick
-the node name where you want to run your trace. In the case of minikube,
-the node is called `minikube`.  So, to start a trace that counts the
-syscalls executed in the node, we can do:
+First, list the nodes with `kubectl get nodes` and then pick the node name
+where you want to run your trace. In the case of a locally running minikube
+with just one node, the node is called `minikube`.  In that case, to start
+a trace that counts the syscalls executed in the node, we can do:
 
 ```
 kubectl-trace-run minikube -e 'tracepoint:syscalls:sys_enter_* { @[probe] = count(); }'
