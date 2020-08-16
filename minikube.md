@@ -91,7 +91,7 @@ $
 
 Minikube doesn't support nested virtualization. It's possible to run it
 inside a virtual machine with `--driver=docker`, but unfortunately
-inspektor gadget doesn't support that.
+inspektor gadget doesn't support that mode.
 
 So, if you intend to run this workshop inside a virtual machine (either a
 local VM, or a VM in the cloud), you will need to use the `--driver=none`
@@ -115,3 +115,6 @@ sudo mv /root/.kube /root/.minikube $HOME
 sudo chown -R $USER $HOME/.kube $HOME/.minikube
 sed -i "s,/root/,$HOME/," $HOME/.kube/config
 ```
+
+Please note that the VM needs to have at least 2 CPUs and at least 2 GB of
+RAM (more if possible).

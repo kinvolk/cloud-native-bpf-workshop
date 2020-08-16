@@ -24,7 +24,9 @@ run minikube inside a VM, you can do this by passing `--use-driver-none` to
 the `./start_minikube.sh` script. This will use the current instance as the
 node and is only recommended for a disposable VM. You will need to install
 the kernel headers for the current OS. If running Ubuntu or Debian, you'll
-also need to install the `conntrack` package if it's not installed.
+also need to install the `conntrack` package if it's not installed and
+possibly change some settings, depending on the specific version you're
+running.
 
 ## Adding the Inspektor Gadget plugin
 
