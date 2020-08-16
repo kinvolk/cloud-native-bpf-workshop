@@ -61,8 +61,10 @@ Running the same `bpftool` command as before should now see that the BPF
 map contains the two containers that have the requested label.
 
 Inspektor Gadget identifies the container with the mount namespace id. You
-can get the mount namespace id of one of the shell pods with the following
-commands:
+can get the mount namespace id of one of the containers by looking at
+`/proc/self/ns/mnt` inside the container. The following commands must be executed
+in the container (reusing the terminal where you run `kubectl run` or using
+`kubectl exec`):
 ```
 readlink /proc/self/ns/mnt
 printf '%016x' $(stat -Lc '%i' /proc/self/ns/mnt) | sed 's/.\{2\}/&\n/g' | tac | xargs echo
