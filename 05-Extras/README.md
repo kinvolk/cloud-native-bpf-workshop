@@ -54,7 +54,7 @@ kubectl run --rm -ti --restart=Never --image ubuntu --labels="app=shell2,role=ex
 
 And a third pod without this `role=extras` label:
 ```
-kubectl run --rm -ti --restart=Never --image ubuntu --labels="app=shell2,role=none" shell3 -- bash
+kubectl run --rm -ti --restart=Never --image ubuntu --labels="app=shell3,role=none" shell3 -- bash
 ```
 
 Running the same `bpftool` command as before should now see that the BPF
