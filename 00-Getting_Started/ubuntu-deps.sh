@@ -9,8 +9,10 @@ sudo apt-get install docker.io
 sudo apt-get install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
 sudo adduser `id -un` libvirt
 
+# curl is needed after this, wget is used in the other scripts
+sudo apt-get install curl wget
+
 # Install kubectl
 curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
-

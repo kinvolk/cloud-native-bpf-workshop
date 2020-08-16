@@ -1,0 +1,34 @@
+#!/usr/bin/env bpftrace
+/* Based on: https://raw.githubusercontent.com/iovisor/bpftrace/master/tools/bashreadline.bt */
+/*
+ * bashreadline    Print entered bash commands from all running shells.
+ *                 For Linux, uses bpftrace and eBPF.
+ *
+ * This works by tracing the readline() function using a uretprobe (uprobes).
+ *
+ * USAGE: bashreadline.bt
+ *
+ * This is a bpftrace version of the bcc tool of the same name.
+ *
+ * Copyright 2018 Netflix, Inc.
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ *
+ * 06-Sep-2018  Brendan Gregg   Created this.
+ */
+
+BEGIN
+{
+        printf("Tracing bash commands... Hit Ctrl-C to end.\n");
+        printf("%-9s %-6s %s\n", "TIME", "PID", "COMMAND");
+}
+
+// This code has been adapted to run in kubectl-trace.
+// Here, $container_pid will get replaced by the PID of the command that's seen
+// as PID 1 inside the container.
+
+uretprobe:/proc/$container_pid/root/bin/bash:readline
+{
+        time("%H:%M:%S  ");
+        printf("%-6d %s\n", pid, str(retval));
+}
+

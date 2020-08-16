@@ -1,11 +1,25 @@
 # Minikube
 
-The Cloud Native BPF Workshop uses this forked branch of Minikube:
+During the Cloud Native BPF Workshop we'll use Minikube to show how to use
+`kubectl-gadget` and `kubectl-trace`. Both these tools require having the
+kernel headers accessible to be able to inject the BPF tracing calls.
+
+If you're going to run Minikube in your local machine, we strongly
+recommend that you run our specially created branch, which already includes
+the kernel headers.
+
+If you're going to run Minikube inside a VM, you can run the upstream version,
+but you need to take care of installing the headers.  See below for
+instructions.
+
+## Running Minikube in your local machine.
+
+We will be using this forked branch of Minikube:
 [alban/bpf-workshop](https://github.com/kinvolk/minikube/tree/alban/bpf-workshop).
 You can either install the pre-built image or build it from source
 yourself.
 
-## Our branch
+### Our branch
 
 It is based on [Minikube v1.12.0-beta.1](https://github.com/kubernetes/minikube/releases/tag/v1.12.0-beta.1) with the following changes:
 
@@ -14,7 +28,7 @@ It is based on [Minikube v1.12.0-beta.1](https://github.com/kubernetes/minikube/
 - Fix podman checksum ([#8700](https://github.com/kubernetes/minikube/issues/8700))
 - Add `CONFIG_FTRACE_SYSCALLS` ([#8637](https://github.com/kubernetes/minikube/issues/8637))
 
-## Installing the pre-built image
+### Installing the pre-built image
 
 This step should take around 10 minutes to complete.
 
@@ -39,7 +53,7 @@ pointers to the documentation for how to set this up for different Linux
 distributions at:
 <https://minikube.sigs.k8s.io/docs/reference/drivers/kvm2/>
 
-## Building the image from source
+### Building the image from source
 
 **Note**: This can take hours to complete so it's only recommended if
 you're doing this well in advance.
@@ -55,7 +69,7 @@ make
 make out/minikube.iso
 ```
 
-## Test Minikube
+### Test Minikube
 
 To verify that your minikube cluster is running the correct kernel with
 kheaders.tar.xz and syscall tracing, you can run the following commands:
@@ -72,3 +86,35 @@ $ sudo ls -l /sys/kernel/debug/tracing/events/syscalls/sys_enter_openat/id
 -r--r--r-- 1 root root 0 Jul 12 14:00 /sys/kernel/debug/tracing/events/syscalls/sys_enter_openat/id
 $
 ```
+
+## Using Minikube inside a virtual machine
+
+Minikube doesn't support nested virtualization. It's possible to run it
+inside a virtual machine with `--driver=docker`, but unfortunately
+inspektor gadget doesn't support that mode.
+
+So, if you intend to run this workshop inside a virtual machine (either a
+local VM, or a VM in the cloud), you will need to use the `--driver=none`
+parameter. This causes Minikube to use the local instance rather than a
+container or a VM as the Kubernetes node.
+
+In this case, you don't need to use our image, but **you'll need to take
+care of installing the kernel headers for the OS that your VM is running**.
+
+```
+# This will start a Minikube cluster in the local machine
+sudo ./minikube start --driver=none --apiserver-ips 127.0.0.1 --apiserver-name localhost
+
+# This will back up any kubectl configuration, as it will then be overwritten
+BACKDIR=$(mktemp -d -p $HOME kubecfg-backup-XXXX)
+if [ -d $HOME/.kube ]; then mv $HOME/.kube ${BACKDIR}; fi
+if [ -d $HOME/.minikube ]; then mv $HOME/.minikube ${BACKDIR}; fi
+
+# This gets the generated kubectl configuration from the root directory
+sudo mv /root/.kube /root/.minikube $HOME
+sudo chown -R $USER $HOME/.kube $HOME/.minikube
+sed -i "s,/root/,$HOME/," $HOME/.kube/config
+```
+
+Please note that the VM needs to have at least 2 CPUs and at least 2 GB of
+RAM (more if possible).

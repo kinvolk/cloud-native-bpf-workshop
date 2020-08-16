@@ -32,6 +32,20 @@ fi
 echo Executing minikube
 chmod +x minikube
 ./minikube delete
-./minikube start --driver=kvm2 --iso-url=file://$(pwd)/minikube.iso
-echo Verifying that kernel headers are correctly installed in minikube
-./minikube ssh -- 'bash -c "uname -a ; if [ -e /sys/kernel/kheaders.tar.xz ] ; then echo kheaders.tar.xz available ; else echo kheaders.tar.xz missing ; fi"'
+
+if [ "$1" == "--use-driver-none" ]; then
+  echo "Starting minikube as root with the none driver, as requested"
+  sudo ./minikube start --driver=none --iso-url=file://$(pwd)/minikube.iso --apiserver-ips 127.0.0.1 --apiserver-name localhost
+  BACKDIR=$(mktemp -d -p $HOME kubecfg-backup-XXXX)
+  echo "Backing up existing kubectl configuration in ${BACKDIR}"
+  if [ -d $HOME/.kube ]; then mv $HOME/.kube ${BACKDIR}; fi
+  if [ -d $HOME/.minikube ]; then mv $HOME/.minikube ${BACKDIR}; fi
+  echo "Getting kubectl configuration from the root directory"
+  sudo mv /root/.kube /root/.minikube $HOME
+  sudo chown -R $USER $HOME/.kube $HOME/.minikube
+  sed -i "s,/root/,$HOME/," $HOME/.kube/config
+else
+  ./minikube start --driver=kvm2 --iso-url=file://$(pwd)/minikube.iso
+  echo Verifying that kernel headers are correctly installed in minikube
+  ./minikube ssh -- 'bash -c "uname -a ; if [ -e /sys/kernel/kheaders.tar.xz ] ; then echo kheaders.tar.xz available ; else echo kheaders.tar.xz missing ; fi"'
+fi
