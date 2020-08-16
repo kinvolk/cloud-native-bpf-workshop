@@ -1,6 +1,6 @@
-## 03 - Extras
+## 05 - Extras
 
-This section will demo the usage of bpftool and some bcc tools directly on the
+This section will demo the usage of `bpftool` and some `bcc` tools directly on the
 worker node in order to explain how things work behind the scene.
 
 This extra will be shown if time allows. This can also be done independently by
@@ -20,7 +20,7 @@ sudo -s
 ps aux | grep [e]xecsnoop
 ```
 
-We notice that bcc tool execsnoop is executed with this parameter:
+We notice that the bcc tool `execsnoop` is executed with this parameter:
 ```
 /usr/share/bcc/tools/execsnoop --mntnsmap /sys/fs/bpf/gadget/mntnsset-20200817XXXXXX-XXXXXXXXXXXX
 ```
@@ -30,11 +30,12 @@ events from processes inside the containers mentioned in this BPF map.
 
 ### Inspect BPF maps with bpftool
 
-Let's inspect the content of this BPF map with bpftool. bpftool is not
+Let's inspect the contents of this BPF map with `bpftool`. `bpftool` is not
 installed by default on Minikube, so we will run it via a container:
 
 ```
-docker run -ti --rm --privileged -v /sys/fs/bpf:/sys/fs/bpf --pid=host kinvolk/bpftool bpftool map dump pinned /sys/fs/bpf/gadget/mntnsset-20200817XXXXXX-XXXXXXXXXXXX
+docker run -ti --rm --privileged -v /sys/fs/bpf:/sys/fs/bpf --pid=host kinvolk/bpftool \
+  bpftool map dump pinned /sys/fs/bpf/gadget/mntnsset-20200817XXXXXX-XXXXXXXXXXXX
 ```
 
 As you can see, the map is currently empty: execsnoop is monitoring exactly
@@ -50,15 +51,18 @@ So let's start a couple of pods with the `role=extras` label in other terminals:
 kubectl run --rm -ti --restart=Never --image ubuntu --labels="app=shell,role=extras" shell -- bash
 kubectl run --rm -ti --restart=Never --image ubuntu --labels="app=shell2,role=extras" shell2 -- bash
 ```
+
 And a third pod without this `role=extras` label:
 ```
 kubectl run --rm -ti --restart=Never --image ubuntu --labels="app=shell2,role=none" shell3 -- bash
 ```
 
-bpftool should now see that the BPF map contains the two containers. Inspektor
-Gadget identifies the container with the mount namespace id.
+Running the same `bpftool` command as before should now see that the BPF
+map contains the two containers that have the requested label.
 
-You can get the mount namespace id of one of the shell pod with the following commands:
+Inspektor Gadget identifies the container with the mount namespace id. You
+can get the mount namespace id of one of the shell pods with the following
+commands:
 ```
 readlink /proc/self/ns/mnt
 printf '%016x' $(stat -Lc '%i' /proc/self/ns/mnt) | sed 's/.\{2\}/&\n/g' | tac | xargs echo
@@ -96,3 +100,6 @@ docker run -ti --rm --privileged -v /usr/src:/usr/src -v /lib/modules:/lib/modul
         -v /sys/fs/bpf:/sys/fs/bpf --pid=host kinvolk/bcc \
         /usr/share/bcc/tools/execsnoop --mntnsmap /sys/fs/bpf/mnt_ns_set
 ```
+
+That's an awful lot of work! This is exactly what the execsnoop gadget is
+saving us from doing.
