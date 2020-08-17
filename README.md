@@ -59,3 +59,13 @@ $ make build
 $ make build image/build-init image/build
 $ make image/push
 ```
+
+# Workshop Material
+
+During the workshop, we will cover the basics of BPF and we will go through
+the exercises listed here, in order.
+
+Please join the slack channel `#2-kubecon-tutorials-bpf` in the CNCF Slack.
+Feel free to ask questions and discuss with your fellow attendees.
+
+You can refer to the [slides](slides.pdf) at any time.
