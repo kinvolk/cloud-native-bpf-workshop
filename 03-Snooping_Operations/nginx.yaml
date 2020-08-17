@@ -74,7 +74,7 @@ spec:
         - name: nginx-volume
           mountPath: /var/www/
         - name: nginx-conf
-          mountPath: /etc/nginx # mount nginx-conf volumn to /etc/nginx
+          mountPath: /etc/nginx # mount nginx-conf volume to /etc/nginx
           readOnly: true
         - name: log
           mountPath: /var/log/nginx
@@ -113,5 +113,3 @@ spec:
     app: nginx
   sessionAffinity: None
   type: LoadBalancer
-
-

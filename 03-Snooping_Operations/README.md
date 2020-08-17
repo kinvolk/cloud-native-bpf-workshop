@@ -20,12 +20,12 @@ kubectl gadget execsnoop --namespace default --selector run=cooking
 At this point, there are no such pods, so nothing is displayed.
 
 In a second terminal, start the following shell script in the pod:
+
 ```
 kubectl run --restart=Never -ti --image=fedora cooking -- sh -c 'curl -L https://www.chef.io/chef/install.sh | bash'
 ```
 
 Each program started by the script should be visible in the first terminal.
-
 
 ### Example 2: debugging a nginx deployment
 
@@ -44,8 +44,8 @@ balancer reachable from our computer. Once we know the URL, we can reach it
 with curl or with your browser.
 
 ```
-URL=http://xxx.xxx.xxx.xxx:yyyyy
-curl $URL/hello.txt
+URL=$(minikube service nginx-deployment --url)
+curl "$URL/hello.txt"
 ```
 
 When fetching the file hello.txt, we get a 404 error. That's a bug: the config
@@ -69,5 +69,5 @@ kubectl edit deploy nginx-deployment
 And reach the webpage again, with success this time:
 
 ```
-curl $URL/hello.txt
+curl "$URL/hello.txt"
 ```
