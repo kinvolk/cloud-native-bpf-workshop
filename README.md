@@ -1,5 +1,7 @@
 # Cloud Native BPF Workshop
 
+This workshop will demonstrate how to use eBPF tools inside Kubernetes.
+
 It's strongly recommended to have all requirements installed and ready to
 use before starting the workshop. This could be on your own computer or on
 a virtual machine that you have access to.
@@ -64,8 +66,5 @@ $ make image/push
 
 During the workshop, we will cover the basics of BPF and we will go through
 the exercises listed here, in order.
-
-Please join the slack channel `#2-kubecon-tutorials-bpf` in the CNCF Slack.
-Feel free to ask questions and discuss with your fellow attendees.
 
 You can refer to the [slides](slides.pdf) at any time.
