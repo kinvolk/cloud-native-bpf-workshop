@@ -5,11 +5,11 @@ set -e
 # Download the executable and the ISO
 echo Downloading minikube components
 if [[ ! -f minikube ]]; then
-  URL=https://2020-08-17-cloud-native-bpf-workshop-public.s3.eu-central-1.amazonaws.com/minikube
+  URL=https://cloud-native-bpf-workshop-public.s3.eu-central-1.amazonaws.com/minikube
   wget $URL
 fi
 if [[ ! -f minikube.iso ]]; then
-  URL=https://2020-08-17-cloud-native-bpf-workshop-public.s3.eu-central-1.amazonaws.com/minikube.iso
+  URL=https://cloud-native-bpf-workshop-public.s3.eu-central-1.amazonaws.com/minikube.iso
   wget $URL
 fi
 
