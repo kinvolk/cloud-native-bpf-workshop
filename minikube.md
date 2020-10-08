@@ -37,8 +37,8 @@ branch. You can download and run them, with these commands:
 
 ```
 mkdir bpf-workshop; cd bpf-workshop
-wget https://eleven.dev.kinvolk.io/u/alban/cloud-native-bpf-workshop/minikube
-wget https://eleven.dev.kinvolk.io/u/alban/cloud-native-bpf-workshop/minikube.iso
+wget https://cloud-native-bpf-workshop-public.s3.eu-central-1.amazonaws.com/minikube
+wget https://cloud-native-bpf-workshop-public.s3.eu-central-1.amazonaws.com/minikube.iso
 chmod +x minikube
 ./minikube delete
 ./minikube start --driver=kvm2 --iso-url=file://$(pwd)/minikube.iso
