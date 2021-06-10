@@ -20,6 +20,13 @@ sha256sum -c <<EOF
 645c7943a793d30d4d7ea34767a184741f8aece9860a22f9ba2d264825530dfc  minikube.iso
 EOF
 
+# If user is not in group libvirt, minikube will fail due to lack of permissions
+if id -Gn | grep -qvw libvirt ; then
+  echo "User '`id -un`' not in group libvirt. Probably, groups have not been updated yet on current shell."
+  echo "Suggestion: run 'newgrp libvirt'"
+  exit 1
+fi
+
 echo This script will delete the existing minikube VM if you have one, and
 echo start a new one.
 read -p "Are you sure? [yes/no] " -r
