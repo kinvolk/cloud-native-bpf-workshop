@@ -36,14 +36,22 @@ website.
 
 ```
 kubectl apply -f nginx.yaml
+```
+
+If the cluster provides a load balancer, we can use the following command to
+know the URL of the nginx service:
+```
+kubectl get svc nginx-deployment
+URL=$(kubectl get svc nginx-deployment -o go-template='{{(index .status.loadBalancer.ingress 0).hostname}}')
+curl "$URL/hello.txt"
+```
+
+If the cluster is minikube, we can use the "minikube service" command to make
+the load balancer reachable from our computer. Once we know the URL, we can
+reach it with curl or with your browser.
+
+```
 minikube service nginx-deployment
-```
-
-Since we use minikube, we use the "minikube service" command to make the load
-balancer reachable from our computer. Once we know the URL, we can reach it
-with curl or with your browser.
-
-```
 URL=$(minikube service nginx-deployment --url)
 curl "$URL/hello.txt"
 ```
