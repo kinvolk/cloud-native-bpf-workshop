@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: privileged-pod
+  namespace: default
+  labels:
+    k8s-app: privileged-pod
+spec:
+  selector:
+    matchLabels:
+      name: privileged-pod
+  template:
+    metadata:
+      labels:
+        name: privileged-pod
+    spec:
+      hostNetwork: true
+      containers:
+      - name: privileged-pod
+        image: ubuntu
+        command: [ "sleep", "100000" ]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: host
+          mountPath: /host
+      volumes:
+      - name: host
+        hostPath:
+          path: /

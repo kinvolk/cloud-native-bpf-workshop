@@ -6,6 +6,24 @@ worker node in order to explain how things work behind the scene.
 This extra will be shown if time allows. This can also be done independently by
 attendees after the tutorial.
 
+### Getting a shell on the host
+
+On minikube, we can get a root shell on the host in the following way:
+```
+./minikube ssh
+sudo -s
+```
+
+In case we don't have direct ssh access to the working nodes, this can be
+achieved in the following way:
+
+```
+kubectl apply -f privileged-ds.yaml
+kubectl get pod -l name=privileged-pod
+kubectl exec -ti privileged-pod-xhxx9 -- /bin/bash
+chroot /host /bin/bash
+```
+
 ### Execsnoop with filter on a label
 
 Let's start by starting the execsnoop gadget in one terminal:
@@ -15,8 +33,7 @@ kubectl gadget execsnoop --selector role=extras
 
 We can figure out what's running on the worker node:
 ```
-./minikube ssh
-sudo -s
+# root shell on the host
 ps aux | grep [e]xecsnoop
 ```
 
@@ -34,6 +51,7 @@ Let's inspect the contents of this BPF map with `bpftool`. `bpftool` is not
 installed by default on Minikube, so we will run it via a container:
 
 ```
+# root shell on the host
 docker run -ti --rm --privileged -v /sys/fs/bpf:/sys/fs/bpf --pid=host kinvolk/bpftool \
   bpftool map dump pinned /sys/fs/bpf/gadget/mntnsset-20200817XXXXXX-XXXXXXXXXXXX
 ```
