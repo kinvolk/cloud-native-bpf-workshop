@@ -4,12 +4,12 @@ Before we get started with the exercises, we need to have all the elements
 in place. This directory has a couple of scripts to help you get quickly
 set up.
 
+## Creating a Minikube cluster
+
 This assumes that your machine has the necessary packages for using libvirt
 already installed, that your user has the right permissions and that you
 already have kubectl installed.  [Instructions on how to get there on
 Ubuntu or Debian](ubuntu.md)
-
-## Creating a Minikube cluster
 
 Install and run minikube by running `./start_minikube.sh`.  This will set
 up a minikube instance as described in our [instructions](../minikube.md).
@@ -27,6 +27,13 @@ the kernel headers for the current OS. If running Ubuntu or Debian, you'll
 also need to install the `conntrack` package if it's not installed and
 possibly change some settings, depending on the specific version you're
 running.
+
+## Using a Gardener shoot cluster with Garden Linux
+
+Ths assumes you have access to a Gardener dashboard to create shoot clusters
+with Garden Linux.
+
+[Instructions on how to prepare Garden Linux nodes](garden-linux.md)
 
 ## Adding the Inspektor Gadget plugin
 
