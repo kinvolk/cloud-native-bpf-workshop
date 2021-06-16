@@ -1,0 +1,94 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kernel-headers-install-script
+  namespace: default
+data:
+  kernel-headers-install-pod.sh: |-
+    #!/bin/bash
+    set -e
+    set -x
+
+    SCRIPT=`readlink -f "$0"`
+    SCRIPTDIR=`dirname "$SCRIPT"`
+
+    cp $SCRIPTDIR/kernel-headers-install-*.sh /host/tmp/
+    chmod +x /host/tmp/kernel-headers-install-*.sh
+
+    chroot /host /bin/bash /tmp/kernel-headers-install-chroot.sh
+
+    echo "Done."
+    sleep infinity
+
+  kernel-headers-install-chroot.sh: |-
+    #!/bin/bash
+    set -e
+    set -x
+
+    rm -f /root/.ssh/id_rsa_kernelheaders{,.pub}
+    cat /dev/zero | ssh-keygen -f /root/.ssh/id_rsa_kernelheaders -N ""
+    cat /root/.ssh/id_rsa_kernelheaders.pub >> /home/admin/.ssh/authorized_keys
+    ssh -i /root/.ssh/id_rsa_kernelheaders admin@localhost "bash /tmp/kernel-headers-install-ssh.sh"
+
+  kernel-headers-install-ssh.sh: |-
+    #!/bin/bash
+    set -e
+    set -x
+
+    sudo mount -o remount,rw /dev/nvme0n1p3
+    mkdir -p /home/admin/sources
+    cd /home/admin/sources
+
+    # TODO: Fix IP
+    export URL_PREFIX="http://255.255.255.255/gardenlinux/pool/main/l/linux/"
+    export LIN_VERSION=5.4.0-6
+    export DEB_VERSION=5.4.93-1
+
+    wget ${URL_PREFIX}linux-headers-${LIN_VERSION}-common_${DEB_VERSION}_all.deb
+    wget ${URL_PREFIX}linux-kbuild-5.4_${DEB_VERSION}_amd64.deb
+    wget ${URL_PREFIX}linux-compiler-gcc-10-x86_${DEB_VERSION}_amd64.deb
+    wget ${URL_PREFIX}linux-headers-${LIN_VERSION}-cloud-amd64_${DEB_VERSION}_amd64.deb
+
+    export DEBIAN_FRONTEND=noninteractive
+    sudo -E apt-get -y update
+    sudo -E apt-get install -y gcc-10
+    sudo -E apt-get install -y ./*.deb
+
+    echo Done.
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kernel-headers-install
+  namespace: default
+  labels:
+    k8s-app: kernel-headers-install
+spec:
+  selector:
+    matchLabels:
+      name: kernel-headers-install
+  template:
+    metadata:
+      labels:
+        name: kernel-headers-install
+    spec:
+      hostNetwork: true
+      containers:
+      - name: kernel-headers-install
+        image: ubuntu
+        #command: [ "sh", "/opt/scripts/kernel-headers-install-pod.sh" ]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: host
+          mountPath: /host
+        - name: scripts
+          mountPath: /opt/scripts
+      volumes:
+      - name: host
+        hostPath:
+          path: /
+      - name: scripts
+        configMap:
+          name: kernel-headers-install-script
